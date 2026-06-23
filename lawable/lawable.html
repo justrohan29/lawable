@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lawable — Legal Education & Professional Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0D1F3C;
+    --navy-mid: #1A3560;
+    --gold: #C9A84C;
+    --gold-light: #F0DFA8;
+    --gold-dim: #7A6230;
+    --cream: #FAF8F3;
+    --cream-dark: #F0EDE4;
+    --white: #FFFFFF;
+    --text-primary: #0D1F3C;
+    --text-secondary: #4A5568;
+    --text-muted: #8A96A6;
+    --border: rgba(13,31,60,0.10);
+    --border-gold: rgba(201,168,76,0.35);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'Inter', system-ui, sans-serif;
+    --transition: 0.2s ease;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--text-primary);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250,248,243,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 64px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo-mark {
+    width: 34px;
+    height: 34px;
+    background: var(--navy);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-mark svg { width: 18px; height: 18px; fill: var(--gold); }
+  .logo-text {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition), background var(--transition);
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+  .nav-link:hover { color: var(--navy); background: var(--cream-dark); }
+  .nav-link.active { color: var(--navy); background: var(--cream-dark); }
+
+  .nav-cta {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cream);
+    background: var(--navy);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: background var(--transition);
+    text-decoration: none;
+  }
+  .nav-cta:hover { background: var(--navy-mid); }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--navy);
+    padding: 100px 40px 80px;
+    text-align: center;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201,168,76,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--border-gold);
+    border-radius: 100px;
+    padding: 5px 14px;
+    margin-bottom: 28px;
+  }
+  .hero-eyebrow span { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; display: inline-block; }
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(38px, 6vw, 64px);
+    font-weight: 400;
+    color: #FFFFFF;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 740px;
+    margin: 0 auto 20px;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-subtitle {
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    max-width: 520px;
+    margin: 0 auto 40px;
+    line-height: 1.7;
+  }
+  .hero-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-gold {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    background: var(--gold);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 12px 28px;
+    cursor: pointer;
+    transition: background var(--transition), transform var(--transition);
+  }
+  .btn-gold:hover { background: #d4b460; transform: translateY(-1px); }
+  .btn-ghost {
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm);
+    padding: 12px 28px;
+    cursor: pointer;
+    transition: background var(--transition);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.14); }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-top: 64px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 40px;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    padding: 0 48px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat-val {
+    font-family: var(--serif);
+    font-size: 36px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .hero-stat-lbl {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 6px;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 80px 40px;
+  }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 400;
+    color: var(--navy);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+  }
+  .section-title em { font-style: italic; color: var(--gold-dim); }
+  .section-desc {
+    font-size: 16px;
+    color: var(--text-secondary);
+    max-width: 540px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  /* ── MODULE CARDS ── */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 900px) { .modules-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .modules-grid { grid-template-columns: 1fr; } }
+
+  .module-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    cursor: pointer;
+    transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  .module-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  .module-card:hover {
+    border-color: rgba(201,168,76,0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(13,31,60,0.09);
+  }
+  .module-card:hover::after { transform: scaleX(1); }
+
+  .module-icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    font-size: 22px;
+  }
+  .module-phase {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 100px;
+    margin-bottom: 10px;
+  }
+  .module-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .module-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .module-arrow {
+    margin-top: 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold-dim);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ── ALTERNATING FEATURE ── */
+  .feature-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+    margin-bottom: 80px;
+  }
+  .feature-block:last-child { margin-bottom: 0; }
+  .feature-block.reverse .feature-visual { order: -1; }
+  @media (max-width: 800px) {
+    .feature-block { grid-template-columns: 1fr; gap: 32px; }
+    .feature-block.reverse .feature-visual { order: 0; }
+  }
+  .feature-visual {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-visual-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  }
+
+  /* ── CERTIFICATION TRACKS ── */
+  .tracks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 700px) { .tracks-grid { grid-template-columns: 1fr; } }
+  .track-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .track-card:hover {
+    border-color: rgba(201,168,76,0.4);
+    box-shadow: 0 4px 20px rgba(13,31,60,0.07);
+  }
+  .track-icon { font-size: 24px; margin-bottom: 12px; }
+  .track-name { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+  .track-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .track-badge {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 100px;
+    background: var(--gold-light);
+    color: var(--gold-dim);
+  }
+
+  /* ── INTERNSHIP ── */
+  .dept-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 700px) { .dept-grid { grid-template-columns: 1fr; } }
+  .dept-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 22px;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .dept-card:hover {
+    border-color: rgba(201,168,76,0.4);
+    box-shadow: 0 4px 20px rgba(13,31,60,0.07);
+  }
+  .dept-emoji { font-size: 26px; margin-bottom: 12px; }
+  .dept-title { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+  .dept-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px; }
+  .dept-apply {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    background: var(--gold-light);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: background var(--transition);
+    width: 100%;
+  }
+  .dept-apply:hover { background: #e8d490; }
+
+  .outcomes-wrap {
+    background: var(--navy);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    margin-top: 40px;
+  }
+  .outcomes-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--white);
+    margin-bottom: 24px;
+  }
+  .outcomes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 700px) { .outcomes-grid { grid-template-columns: 1fr; } }
+  .outcome-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .outcome-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; margin-top: 8px; flex-shrink: 0; }
+  .outcome-text { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.5; }
+
+  /* ── AI ASSISTANT ── */
+  .ai-section { background: var(--white); }
+  .chat-container {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .chat-header {
+    background: var(--navy);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .chat-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .chat-header-info { flex: 1; }
+  .chat-header-name { font-size: 14px; font-weight: 600; color: var(--white); }
+  .chat-header-status { font-size: 12px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 5px; }
+  .status-dot { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; }
+  .chat-body { padding: 24px; min-height: 320px; max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+  .msg { display: flex; gap: 8px; }
+  .msg.user { flex-direction: row-reverse; }
+  .msg-bubble {
+    max-width: 72%;
+    font-size: 14px;
+    line-height: 1.55;
+    padding: 10px 14px;
+    border-radius: 16px;
+  }
+  .msg.ai .msg-bubble { background: var(--white); color: var(--text-primary); border-radius: 4px 16px 16px 16px; border: 1px solid var(--border); }
+  .msg.user .msg-bubble { background: var(--navy); color: var(--white); border-radius: 16px 4px 16px 16px; }
+  .msg-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .msg.ai .msg-avatar { background: var(--gold-light); }
+  .msg.user .msg-avatar { background: var(--navy-mid); color: var(--white); }
+  .chat-input-area {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--white);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .chat-input {
+    flex: 1;
+    font-size: 14px;
+    font-family: var(--sans);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 10px 18px;
+    background: var(--cream);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color var(--transition);
+  }
+  .chat-input:focus { border-color: rgba(201,168,76,0.6); }
+  .chat-send {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--navy);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition);
+    flex-shrink: 0;
+  }
+  .chat-send:hover { background: var(--navy-mid); }
+  .chat-send svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ── ROADMAP ── */
+  .roadmap-section { background: var(--white); }
+  .roadmap-timeline {
+    position: relative;
+    padding-left: 32px;
+    max-width: 720px;
+  }
+  .roadmap-timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-item { position: relative; margin-bottom: 48px; }
+  .timeline-item:last-child { margin-bottom: 0; }
+  .timeline-dot {
+    position: absolute;
+    left: -32px;
+    top: 4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    z-index: 1;
+  }
+  .timeline-phase {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .timeline-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--navy);
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  .timeline-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .timeline-tag {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    background: var(--cream);
+  }
+
+  /* ── IMPACT SECTION ── */
+  .impact-section { background: var(--navy); }
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+  @media (max-width: 800px) { .impact-grid { grid-template-columns: repeat(2, 1fr); } }
+  .impact-card {
+    background: rgba(255,255,255,0.04);
+    padding: 32px 24px;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+  .impact-card:hover { background: rgba(255,255,255,0.07); }
+  .impact-who {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .impact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .impact-item:last-child { margin-bottom: 0; }
+  .impact-check { color: var(--gold); font-size: 14px; margin-top: 2px; flex-shrink: 0; }
+  .impact-text { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.45; }
+
+  /* ── CTA BANNER ── */
+  .cta-section {
+    background: var(--cream);
+    padding: 80px 40px;
+    text-align: center;
+  }
+  .cta-inner {
+    background: var(--navy);
+    border-radius: var(--radius-xl);
+    padding: 64px 48px;
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(201,168,76,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-title {
+    font-family: var(--serif);
+    font-size: 38px;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .cta-title em { font-style: italic; color: var(--gold); }
+  .cta-sub { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 36px; line-height: 1.65; }
+  .cta-form { display: flex; gap: 10px; max-width: 420px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+  .cta-input {
+    flex: 1;
+    min-width: 200px;
+    font-size: 14px;
+    font-family: var(--sans);
+    padding: 11px 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    color: var(--white);
+    outline: none;
+  }
+  .cta-input::placeholder { color: rgba(255,255,255,0.35); }
+  .cta-input:focus { border-color: var(--gold); }
+  .cta-btn {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    background: var(--gold);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 11px 24px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .cta-btn:hover { background: #d4b460; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080F1E;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-logo {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--gold);
+  }
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+  .footer-link {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .footer-link:hover { color: rgba(255,255,255,0.7); }
+  .footer-copy { font-size: 13px; color: rgba(255,255,255,0.3); }
+
+  /* ── SUBTLE ANIMATIONS ── */
+  @media (prefers-reduced-motion: no-preference) {
+    .module-card, .track-card, .dept-card { transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; }
+  }
+
+  /* ── SCROLLBAR ── */
+  .chat-body::-webkit-scrollbar { width: 4px; }
+  .chat-body::-webkit-scrollbar-track { background: transparent; }
+  .chat-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#" onclick="showPage('home')">
+    <div class="logo-mark">
+      <svg viewBox="0 0 18 18"><path d="M9 1l2.5 5.5H17l-4.5 4 1.7 5.5L9 13l-5.2 3 1.7-5.5L1 6.5h5.5z"/></svg>
+    </div>
+    <span class="logo-text">Lawable</span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('home', this)">Home</button>
+    <button class="nav-link" onclick="showPage('learn', this)">Education</button>
+    <button class="nav-link" onclick="showPage('intern', this)">Internships</button>
+    <button class="nav-link" onclick="showPage('ai', this)">AI Assistant</button>
+    <button class="nav-link" onclick="showPage('roadmap', this)">Roadmap</button>
+  </div>
+  <button class="nav-cta">Join waitlist</button>
+</nav>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<div id="home" class="page active">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow"><span></span> LegalTech Ecosystem · Launching 2026</div>
+    <h1 class="hero-title">Legal expertise, <em>made accessible</em> for everyone</h1>
+    <p class="hero-subtitle">Lawable connects students, lawyers, and businesses through education, mentorship, internships, and AI-powered legal support — in one unified platform.</p>
+    <div class="hero-btns">
+      <button class="btn-gold" onclick="showPage('learn', document.querySelectorAll('.nav-link')[1])">Explore the platform</button>
+      <button class="btn-ghost" onclick="showPage('ai', document.querySelectorAll('.nav-link')[3])">Try AI assistant →</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val">8</div><div class="hero-stat-lbl">Platform modules</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">6</div><div class="hero-stat-lbl">Certification tracks</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">4</div><div class="hero-stat-lbl">Stakeholder groups</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">3</div><div class="hero-stat-lbl">Rollout phases</div></div>
+    </div>
+  </div>
+
+  <!-- MODULES -->
+  <section style="background: var(--cream);">
+    <div class="section-inner">
+      <div class="eyebrow">What we offer</div>
+      <h2 class="section-title">One ecosystem. <em>Every legal need.</em></h2>
+      <p class="section-desc">From learning the basics to running a compliant business, every piece of the legal puzzle lives in Lawable.</p>
+      <div class="modules-grid">
+        <div class="module-card" onclick="showPage('learn', document.querySelectorAll('.nav-link')[1])">
+          <div class="module-icon-wrap" style="background:#EAF3DE;">📚</div>
+          <div class="module-phase" style="background:#EAF3DE;color:#27500A;">Phase 1</div>
+          <div class="module-name">Legal education</div>
+          <div class="module-desc">Recorded courses, live webinars, workshops, and case-based learning curated by practicing lawyers.</div>
+          <div class="module-arrow">Explore courses →</div>
+        </div>
+        <div class="module-card" onclick="showPage('learn', document.querySelectorAll('.nav-link')[1])">
+          <div class="module-icon-wrap" style="background:#EEEDFE;">🏅</div>
+          <div class="module-phase" style="background:#EEEDFE;color:#3C3489;">Phase 2</div>
+          <div class="module-name">Certification programs</div>
+          <div class="module-desc">Industry-recognised tracks in compliance, IP, startup law, cyber law, and more.</div>
+          <div class="module-arrow">View tracks →</div>
+        </div>
+        <div class="module-card" onclick="showPage('intern', document.querySelectorAll('.nav-link')[2])">
+          <div class="module-icon-wrap" style="background:#E6F1FB;">🎓</div>
+          <div class="module-phase" style="background:#E6F1FB;color:#0C447C;">Phase 1</div>
+          <div class="module-name">Internship program</div>
+          <div class="module-desc">Remote, output-oriented internships across legal, compliance, tech, and business functions.</div>
+          <div class="module-arrow">Browse roles →</div>
+        </div>
+        <div class="module-card">
+          <div class="module-icon-wrap" style="background:#FAEEDA;">🤝</div>
+          <div class="module-phase" style="background:#FAEEDA;color:#633806;">Phase 2</div>
+          <div class="module-name">Mentorship network</div>
+          <div class="module-desc">One-on-one guidance from practising lawyers, with practical assignments and career coaching.</div>
+          <div class="module-arrow">Meet mentors →</div>
+        </div>
+        <div class="module-card">
+          <div class="module-icon-wrap" style="background:#FAECE7;">🏢</div>
+          <div class="module-phase" style="background:#FAECE7;color:#712B13;">Phase 2</div>
+          <div class="module-name">Corporate compliance</div>
+          <div class="module-desc">Risk reduction frameworks and expert legal guidance tailored to growing businesses.</div>
+          <div class="module-arrow">Learn more →</div>
+        </div>
+        <div class="module-card" onclick="showPage('ai', document.querySelectorAll('.nav-link')[3])">
+          <div class="module-icon-wrap" style="background:#E1F5EE;">🤖</div>
+          <div class="module-phase" style="background:#E1F5EE;color:#085041;">Phase 3</div>
+          <div class="module-name">AI legal assistant</div>
+          <div class="module-desc">Instant answers, platform navigation, and seamless escalation to a qualified lawyer when needed.</div>
+          <div class="module-arrow">Try it now →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT -->
+  <div class="impact-section">
+    <div class="section-inner" style="padding:0;">
+      <div class="impact-grid">
+        <div class="impact-card">
+          <div class="impact-who">For students</div>
+          <div class="impact-item"><div class="impact-check">✦</div><div class="impact-text">Industry exposure before graduation</div></div>
+          <div class="impact-item"><div class="impact-check">✦</div><div class="impact-text">Enhanced employability</div></div>
+          <div class="impact-item"><div class="impact-check">✦</div><div class="impact-text">Practical skills development</div></div>
+        </div>
+        <div class="impact-card">
+          <div class="impact-who">For lawyers</div>
+          <div class="impact-item"><div class="impact-check">✦</div><div class="impact-text">Professional visibility</div></div>
+          <div class="impact-item"><div class="impact-check">✦</div><div class="impact-text">New client acquisition</div></div>
+          <div class="impact-item"><div class="impact-check">✦</div><div class="impact-text">Networking opportunities</div></div>
+        </div>
+        <div class="impact-card">
+          <div class="impact-who">For businesses</div>
+          <div class="impact-item"><div class="impact-check">✦</div><div class="impact-text">Compliance support</div></div>
+          <div class="impact-item"><div class="impact-check">✦</div><div class="impact-text">Risk reduction</div></div>
+          <div class="impact-item"><div class="impact-check">✦</div><div class="impact-text">Expert legal guidance</div></div>
+        </div>
+        <div class="impact-card">
+          <div class="impact-who">For individuals</div>
+          <div class="impact-item"><div class="impact-check">✦</div><div class="impact-text">Affordable legal assistance</div></div>
+          <div class="impact-item"><div class="impact-check">✦</div><div class="impact-text">Increased legal awareness</div></div>
+          <div class="impact-item"><div class="impact-check">✦</div><div class="impact-text">Easy access to services</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-inner">
+      <h2 class="cta-title">Be first to access <em>Lawable</em></h2>
+      <p class="cta-sub">Join the waitlist and get early access to courses, internships, and our AI legal assistant when we launch.</p>
+      <div class="cta-form">
+        <input class="cta-input" type="email" placeholder="Enter your email" />
+        <button class="cta-btn">Join waitlist</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ EDUCATION ═══════════════ -->
+<div id="learn" class="page">
+
+  <section style="background:var(--cream);">
+    <div class="section-inner">
+      <div class="eyebrow">Legal education platform</div>
+      <h2 class="section-title">Learn from <em>practitioners,</em> not just textbooks</h2>
+      <p class="section-desc">Industry-oriented training that bridges the gap between theory and real-world legal practice.</p>
+
+      <div class="feature-block">
+        <div>
+          <h3 style="font-family:var(--serif);font-size:24px;color:var(--navy);margin-bottom:12px;">Courses built around real cases</h3>
+          <p style="font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px;">Every module is grounded in actual case law and practical scenarios, so you learn how legal principles apply in the real world — not just in theory.</p>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+            <li style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--text-secondary);"><span style="color:var(--gold);font-weight:700;margin-top:1px;">✦</span> Recorded self-paced modules</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--text-secondary);"><span style="color:var(--gold);font-weight:700;margin-top:1px;">✦</span> Live webinars with Q&amp;A</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--text-secondary);"><span style="color:var(--gold);font-weight:700;margin-top:1px;">✦</span> Hands-on workshops &amp; simulations</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--text-secondary);"><span style="color:var(--gold);font-weight:700;margin-top:1px;">✦</span> Industry-oriented training</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <div class="feature-visual-accent"></div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="background:var(--cream);border-radius:var(--radius-md);padding:14px 16px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;">
+              <div style="font-size:22px;">⚖️</div>
+              <div><div style="font-size:14px;font-weight:600;color:var(--navy);">Contract law fundamentals</div><div style="font-size:12px;color:var(--text-muted);">12 modules · 6h total · Certificate</div></div>
+              <div style="margin-left:auto;font-size:12px;font-weight:600;background:var(--gold-light);color:var(--gold-dim);padding:3px 9px;border-radius:100px;">Popular</div>
+            </div>
+            <div style="background:var(--cream);border-radius:var(--radius-md);padding:14px 16px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;">
+              <div style="font-size:22px;">🏛️</div>
+              <div><div style="font-size:14px;font-weight:600;color:var(--navy);">Corporate compliance essentials</div><div style="font-size:12px;color:var(--text-muted);">8 modules · 4h total · Certificate</div></div>
+            </div>
+            <div style="background:var(--cream);border-radius:var(--radius-md);padding:14px 16px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;">
+              <div style="font-size:22px;">💡</div>
+              <div><div style="font-size:14px;font-weight:600;color:var(--navy);">Startup law for founders</div><div style="font-size:12px;color:var(--text-muted);">10 modules · 5h total · Certificate</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--white);">
+    <div class="section-inner">
+      <div class="eyebrow">Certification tracks</div>
+      <h2 class="section-title">Credentials that <em>mean something</em></h2>
+      <p class="section-desc">Six specialised tracks built with industry partners, designed to signal real competency to employers and clients.</p>
+      <div class="tracks-grid">
+        <div class="track-card"><div class="track-icon">🛡️</div><div class="track-name">Corporate compliance</div><div class="track-desc">Regulatory frameworks, risk assessment, and internal policy design.</div><div class="track-badge">Phase 2</div></div>
+        <div class="track-card"><div class="track-icon">🔍</div><div class="track-name">Legal research</div><div class="track-desc">Case law analysis, statutory interpretation, and legal memo writing.</div><div class="track-badge">Phase 2</div></div>
+        <div class="track-card"><div class="track-icon">📄</div><div class="track-name">Contract drafting</div><div class="track-desc">Drafting, reviewing, and negotiating commercial contracts.</div><div class="track-badge">Phase 2</div></div>
+        <div class="track-card"><div class="track-icon">🔐</div><div class="track-name">Cyber law</div><div class="track-desc">Data protection, privacy regulations, and digital rights.</div><div class="track-badge">Phase 2</div></div>
+        <div class="track-card"><div class="track-icon">💡</div><div class="track-name">Intellectual property</div><div class="track-desc">Patents, trademarks, copyrights, and IP strategy for businesses.</div><div class="track-badge">Phase 2</div></div>
+        <div class="track-card"><div class="track-icon">🚀</div><div class="track-name">Startup law</div><div class="track-desc">Incorporation, equity, fundraising, and founder agreements.</div><div class="track-badge">Phase 2</div></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══════════════ INTERNSHIPS ═══════════════ -->
+<div id="intern" class="page">
+
+  <section style="background:var(--cream);">
+    <div class="section-inner">
+      <div class="eyebrow">Internship program</div>
+      <h2 class="section-title">Real work. Real exposure. <em>Real outcomes.</em></h2>
+      <p class="section-desc">Remote, output-oriented internships across legal, compliance, technology, and business. Build a portfolio, not just a résumé.</p>
+      <div class="dept-grid">
+        <div class="dept-card">
+          <div class="dept-emoji">⚖️</div>
+          <div class="dept-title">Legal research</div>
+          <div class="dept-desc">Case law analysis, statutory interpretation, legal memos, and opinion writing under lawyer supervision.</div>
+          <button class="dept-apply">Apply for this role →</button>
+        </div>
+        <div class="dept-card">
+          <div class="dept-emoji">🛡️</div>
+          <div class="dept-title">Compliance</div>
+          <div class="dept-desc">Regulatory research, policy drafting, and building risk frameworks for real clients.</div>
+          <button class="dept-apply">Apply for this role →</button>
+        </div>
+        <div class="dept-card">
+          <div class="dept-emoji">✍️</div>
+          <div class="dept-title">Content creation</div>
+          <div class="dept-desc">Legal explainers, blog posts, and knowledge base articles that make law understandable.</div>
+          <button class="dept-apply">Apply for this role →</button>
+        </div>
+        <div class="dept-card">
+          <div class="dept-emoji">💻</div>
+          <div class="dept-title">Technology</div>
+          <div class="dept-desc">Platform development, AI integration, and legal data workflows. Perfect for law-meets-tech profiles.</div>
+          <button class="dept-apply">Apply for this role →</button>
+        </div>
+        <div class="dept-card">
+          <div class="dept-emoji">📣</div>
+          <div class="dept-title">Marketing</div>
+          <div class="dept-desc">Campaigns, social media strategy, and community outreach for a mission-driven brand.</div>
+          <button class="dept-apply">Apply for this role →</button>
+        </div>
+        <div class="dept-card">
+          <div class="dept-emoji">📈</div>
+          <div class="dept-title">Business development</div>
+          <div class="dept-desc">Partnerships, outreach strategy, and building the client pipeline from the ground up.</div>
+          <button class="dept-apply">Apply for this role →</button>
+        </div>
+      </div>
+
+      <div class="outcomes-wrap">
+        <div class="outcomes-title">What every intern takes away</div>
+        <div class="outcomes-grid">
+          <div class="outcome-item"><div class="outcome-dot"></div><div class="outcome-text">Legal research skills applicable across practice areas</div></div>
+          <div class="outcome-item"><div class="outcome-dot"></div><div class="outcome-text">Professional communication in a legal context</div></div>
+          <div class="outcome-item"><div class="outcome-dot"></div><div class="outcome-text">Async team collaboration at startup pace</div></div>
+          <div class="outcome-item"><div class="outcome-dot"></div><div class="outcome-text">Client-facing communication and management</div></div>
+          <div class="outcome-item"><div class="outcome-dot"></div><div class="outcome-text">First-hand startup exposure and ownership</div></div>
+          <div class="outcome-item"><div class="outcome-dot"></div><div class="outcome-text">Technology adoption in modern legal practice</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══════════════ AI ASSISTANT ═══════════════ -->
+<div id="ai" class="page">
+  <section class="ai-section">
+    <div class="section-inner">
+      <div class="eyebrow">AI legal assistant</div>
+      <h2 class="section-title">Your first point of contact <em>for any legal question</em></h2>
+      <p class="section-desc">Get instant legal information, navigate the platform, or get connected to a qualified lawyer — all in one conversation.</p>
+
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="chat-avatar">⚖️</div>
+          <div class="chat-header-info">
+            <div class="chat-header-name">Lawable AI</div>
+            <div class="chat-header-status"><div class="status-dot"></div> Online · responds instantly</div>
+          </div>
+        </div>
+        <div class="chat-body" id="chat-body">
+          <div class="msg ai">
+            <div class="msg-avatar">⚖️</div>
+            <div class="msg-bubble">Hello! I'm the Lawable AI assistant. I can answer general legal questions, explain platform features, or connect you with a qualified lawyer from our network. How can I help you today?</div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input class="chat-input" id="chat-in" type="text" placeholder="Ask a legal question..." onkeydown="if(event.key==='Enter')sendMsg()" />
+          <button class="chat-send" onclick="sendMsg()" aria-label="Send message">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;max-width:680px;margin:20px auto 0;">
+        <button onclick="quickSend('What certifications do you offer?')" style="font-size:13px;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--white);color:var(--text-secondary);cursor:pointer;text-align:left;transition:border-color 0.2s;">💡 What certifications do you offer?</button>
+        <button onclick="quickSend('How do I apply for an internship?')" style="font-size:13px;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--white);color:var(--text-secondary);cursor:pointer;text-align:left;transition:border-color 0.2s;">🎓 How do I apply for an internship?</button>
+        <button onclick="quickSend('I need to speak to a lawyer')" style="font-size:13px;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--white);color:var(--text-secondary);cursor:pointer;text-align:left;transition:border-color 0.2s;">⚖️ I need to speak to a lawyer</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════ ROADMAP ═══════════════ -->
+<div id="roadmap" class="page">
+  <section class="roadmap-section">
+    <div class="section-inner">
+      <div class="eyebrow">Implementation roadmap</div>
+      <h2 class="section-title">Three phases to a <em>full ecosystem</em></h2>
+      <p class="section-desc">A deliberate, phased rollout — building the foundation before scaling, and scaling before deploying AI at the core.</p>
+
+      <div class="roadmap-timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--gold-light);color:var(--gold-dim);border-color:var(--cream-dark);">1</div>
+          <div class="timeline-phase" style="color:var(--gold-dim);">Phase 1 — Foundation</div>
+          <div class="timeline-title">Build the base: website, courses, and first interns</div>
+          <div class="timeline-tags">
+            <span class="timeline-tag">Website MVP</span>
+            <span class="timeline-tag">Internship program launch</span>
+            <span class="timeline-tag">Initial course library</span>
+            <span class="timeline-tag">Legal expert recruitment</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--navy);color:var(--gold);border-color:var(--cream-dark);">2</div>
+          <div class="timeline-phase" style="color:var(--navy-mid);">Phase 2 — Growth</div>
+          <div class="timeline-title">Expand reach: certifications, partnerships, and services</div>
+          <div class="timeline-tags">
+            <span class="timeline-tag">Certification programs</span>
+            <span class="timeline-tag">University partnerships</span>
+            <span class="timeline-tag">National webinars</span>
+            <span class="timeline-tag">Expanded legal services</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot" style="background:var(--cream-dark);color:var(--text-secondary);border-color:var(--cream-dark);">3</div>
+          <div class="timeline-phase" style="color:var(--text-muted);">Phase 3 — Scale</div>
+          <div class="timeline-title">Go national: AI deployment, enterprise, and beyond</div>
+          <div class="timeline-tags">
+            <span class="timeline-tag">AI assistant deployment</span>
+            <span class="timeline-tag">Enterprise compliance solutions</span>
+            <span class="timeline-tag">National expansion</span>
+            <span class="timeline-tag">International collaborations</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-section">
+    <div class="cta-inner">
+      <h2 class="cta-title">Be part of <em>Lawable</em> from day one</h2>
+      <p class="cta-sub">Join the waitlist. Get early access to internships, courses, and our AI assistant the moment we launch.</p>
+      <div class="cta-form">
+        <input class="cta-input" type="email" placeholder="Enter your email" />
+        <button class="cta-btn">Join waitlist</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Lawable</div>
+  <div class="footer-links">
+    <span class="footer-link" onclick="showPage('home')">Home</span>
+    <span class="footer-link" onclick="showPage('learn')">Education</span>
+    <span class="footer-link" onclick="showPage('intern')">Internships</span>
+    <span class="footer-link" onclick="showPage('ai')">AI Assistant</span>
+    <span class="footer-link" onclick="showPage('roadmap')">Roadmap</span>
+  </div>
+  <div class="footer-copy">© 2026 Lawable. All rights reserved.</div>
+</footer>
+
+<script>
+  /* ── Navigation ── */
+  function showPage(id, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+    if (btn) {
+      btn.classList.add('active');
+    } else {
+      const map = { home:0, learn:1, intern:2, ai:3, roadmap:4 };
+      const links = document.querySelectorAll('.nav-link');
+      if (map[id] !== undefined) links[map[id]].classList.add('active');
+    }
+  }
+
+  /* ── AI Chat ── */
+  const replies = {
+    internship: "We offer 6 internship departments: Legal Research, Compliance, Content Creation, Technology, Marketing, and Business Development. All are remote and flexible. Head to the Internships page to apply — or I can tell you more about a specific role.",
+    certification: "Our certification tracks launch in Phase 2 and include: Corporate Compliance, Legal Research, Contract Drafting, Cyber Law, Intellectual Property, and Startup Law. Each ends with an industry-recognised certificate.",
+    lawyer: "Absolutely. Please describe your legal matter briefly and I'll match you with the right qualified lawyer from our network. If it's urgent, I can escalate your query to someone available today.",
+    compliance: "Corporate compliance means ensuring your business follows applicable laws and regulations — from employment law to data protection. Lawable offers compliance training, certifications, and expert advisory services for businesses of all sizes.",
+    contract: "A contract is a legally binding agreement between two or more parties. Key elements include offer, acceptance, consideration, and mutual intent. Need help reviewing or drafting one? I can connect you with a contract specialist.",
+    course: "Our education platform includes recorded self-paced courses, live webinars, and workshops — all designed around real case studies. Topics range from contract law to IP to startup law. Certifications are available on completion.",
+    ai: "I'm the Lawable AI assistant — your first stop for legal information, platform navigation, and lawyer referrals. I handle FAQs, explain legal concepts in plain language, and escalate complex matters to qualified lawyers in our network.",
+    startup: "Startup Law covers the legal essentials every founder needs: choosing the right company structure, drafting founder agreements, understanding equity and vesting, and navigating early-stage fundraising. We offer a dedicated certification track.",
+    ip: "Intellectual Property law covers patents, trademarks, copyrights, and trade secrets. Whether you're protecting a product, brand, or creative work, our IP certification track and lawyer network can help.",
+  };
+
+  function sendMsg() {
+    const inp = document.getElementById('chat-in');
+    const q = inp.value.trim();
+    if (!q) return;
+    appendMsg('user', q);
+    inp.value = '';
+    const lq = q.toLowerCase();
+    let reply = "That's a great question. For advice specific to your situation, a qualified lawyer is always the safest option. Want me to connect you with one from our network? It only takes a moment.";
+    for (const [key, val] of Object.entries(replies)) {
+      if (lq.includes(key)) { reply = val; break; }
+    }
+    setTimeout(() => appendMsg('ai', reply), 650);
+  }
+
+  function quickSend(text) {
+    document.getElementById('chat-in').value = text;
+    sendMsg();
+  }
+
+  function appendMsg(role, text) {
+    const body = document.getElementById('chat-body');
+    const div = document.createElement('div');
+    div.className = 'msg ' + role;
+    div.innerHTML = role === 'ai'
+      ? `<div class="msg-avatar">⚖️</div><div class="msg-bubble">${text}</div>`
+      : `<div class="msg-bubble">${text}</div><div class="msg-avatar" style="background:var(--navy-mid);color:var(--white);font-size:11px;font-weight:600;">You</div>`;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+  }
+</script>
+</body>
+</html>
