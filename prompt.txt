@@ -1,0 +1,605 @@
+# LAWABLE MVP
+
+## Product Requirements Document + System Design
+
+### Version 1.0
+
+---
+
+# Executive Summary
+
+Lawable is a legal career acceleration platform designed to bridge the gap between legal education and legal employment.
+
+The platform helps law students gain practical exposure through internships, mentorship, legal projects, skill development resources, and networking opportunities with legal professionals.
+
+The first version of Lawable focuses exclusively on becoming the default professional development platform for law students.
+
+The platform does NOT initially provide direct legal services to clients, litigation support, compliance services, or lawyer marketplaces.
+
+The MVP objective is to build a trusted ecosystem of law students, mentors, legal professionals, recruiters, and organizations.
+
+---
+
+# Core Mission
+
+Provide law students with:
+
+* Practical exposure
+* Career mentorship
+* Internship opportunities
+* Legal research projects
+* Industry networking
+* Skill development resources
+
+while creating a talent pipeline for legal employers.
+
+---
+
+# Primary Users
+
+## Student
+
+Law students from universities and colleges.
+
+Goals:
+
+* Find internships
+* Improve employability
+* Connect with mentors
+* Build professional profile
+* Access learning resources
+
+---
+
+## Mentor
+
+Lawyers and legal professionals.
+
+Goals:
+
+* Mentor students
+* Build professional visibility
+* Conduct sessions
+* Evaluate students
+
+---
+
+## Recruiter
+
+Law firms, startups, legal teams, compliance firms.
+
+Goals:
+
+* Discover talent
+* Post internships
+* Review applications
+* Hire students
+
+---
+
+## Admin
+
+Lawable internal team.
+
+Goals:
+
+* Manage platform
+* Approve mentors
+* Moderate content
+* Manage opportunities
+* Track analytics
+
+---
+
+# MVP Features
+
+## 1. Authentication
+
+Student registration
+
+Fields:
+
+* Full Name
+* Email
+* Mobile Number
+* College
+* Year of Study
+* City
+* Password
+
+Login
+
+Forgot Password
+
+Email Verification
+
+---
+
+## 2. Student Profile
+
+Fields:
+
+* Name
+* Profile Photo
+* College
+* Graduation Year
+* Skills
+* Interests
+* Resume Upload
+* LinkedIn URL
+* Bio
+
+Dashboard Displays:
+
+* Profile Completion
+* Applications Submitted
+* Upcoming Sessions
+* Recommended Opportunities
+
+---
+
+## 3. Opportunity Hub
+
+Central platform feature.
+
+Contains:
+
+### Internships
+
+Fields:
+
+* Title
+* Organization
+* Location
+* Duration
+* Stipend
+* Description
+* Requirements
+
+### Research Projects
+
+Fields:
+
+* Project Name
+* Mentor
+* Duration
+* Deliverables
+
+### Volunteer Opportunities
+
+Fields:
+
+* Organization
+* Responsibilities
+* Duration
+
+Students can:
+
+* Browse
+* Search
+* Filter
+* Apply
+
+---
+
+## 4. Mentorship Platform
+
+Mentors create profiles.
+
+Fields:
+
+* Name
+* Designation
+* Expertise
+* Experience
+* Bio
+
+Students can:
+
+* View mentors
+* Request sessions
+* Book slots
+
+Session Types:
+
+* Career Guidance
+* CV Review
+* Mock Interview
+* Corporate Law Mentorship
+* Litigation Mentorship
+
+---
+
+## 5. Resource Library
+
+Contains:
+
+* Legal Research Guides
+* Drafting Templates
+* Interview Preparation Material
+* Webinar Recordings
+* Industry Notes
+
+Categories:
+
+* Corporate Law
+* Litigation
+* Arbitration
+* IP Law
+* Startup Law
+* Compliance
+
+---
+
+## 6. Community
+
+Discussion platform.
+
+Channels:
+
+* Internships
+* Moot Courts
+* Corporate Law
+* Litigation
+* Research
+* General Discussion
+
+Users can:
+
+* Post
+* Comment
+* Like
+
+---
+
+## 7. Admin Panel
+
+Admin controls:
+
+* Users
+* Mentors
+* Opportunities
+* Applications
+* Content
+* Analytics
+
+---
+
+# Future Features
+
+Not part of MVP.
+
+Phase 2:
+
+* Certifications
+* LMS
+* Course Delivery
+* Placement Partnerships
+
+Phase 3:
+
+* Lawyer Marketplace
+* Client Portal
+* Legal Services
+
+Phase 4:
+
+* AI Legal Assistant
+* Legal Research AI
+* Contract Analysis
+
+---
+
+# User Flow
+
+Student Journey
+
+Register
+
+↓
+
+Complete Profile
+
+↓
+
+Upload Resume
+
+↓
+
+Browse Opportunities
+
+↓
+
+Apply
+
+↓
+
+Book Mentor Session
+
+↓
+
+Participate in Community
+
+↓
+
+Build Professional Portfolio
+
+↓
+
+Get Internship / Placement
+
+---
+
+# Database Design
+
+Users
+
+* id
+* role
+* name
+* email
+* password_hash
+* created_at
+
+Students
+
+* id
+* user_id
+* college
+* year
+* bio
+* resume_url
+
+Mentors
+
+* id
+* user_id
+* expertise
+* experience
+
+Organizations
+
+* id
+* name
+* description
+
+Opportunities
+
+* id
+* organization_id
+* title
+* type
+* description
+* duration
+
+Applications
+
+* id
+* student_id
+* opportunity_id
+* status
+
+Sessions
+
+* id
+* mentor_id
+* student_id
+* datetime
+* status
+
+Resources
+
+* id
+* title
+* category
+* file_url
+
+CommunityPosts
+
+* id
+* user_id
+* title
+* content
+
+Comments
+
+* id
+* post_id
+* user_id
+* content
+
+---
+
+# System Architecture
+
+Frontend
+
+Next.js
+
+TypeScript
+
+TailwindCSS
+
+ShadCN UI
+
+---
+
+Backend
+
+NestJS
+
+REST API
+
+JWT Authentication
+
+Role Based Access Control
+
+---
+
+Database
+
+PostgreSQL
+
+---
+
+Storage
+
+AWS S3
+
+For:
+
+* Resumes
+* Documents
+* Resource Files
+
+---
+
+Authentication
+
+Clerk
+
+or
+
+Auth.js
+
+---
+
+Deployment
+
+Frontend
+
+Vercel
+
+Backend
+
+Railway
+
+Database
+
+Supabase PostgreSQL
+
+---
+
+# API Structure
+
+/auth
+
+POST /register
+
+POST /login
+
+POST /logout
+
+/users
+
+GET /profile
+
+PUT /profile
+
+/opportunities
+
+GET /
+
+GET /:id
+
+POST /
+
+PUT /:id
+
+DELETE /:id
+
+/applications
+
+POST /apply
+
+GET /my-applications
+
+/mentors
+
+GET /
+
+GET /:id
+
+POST /book-session
+
+/resources
+
+GET /
+
+POST /
+
+/community
+
+GET /posts
+
+POST /posts
+
+POST /comments
+
+---
+
+# Data Flow
+
+Student Login
+
+↓
+
+Authentication Service
+
+↓
+
+Database Validation
+
+↓
+
+JWT Issued
+
+↓
+
+Dashboard Loaded
+
+↓
+
+API Calls
+
+↓
+
+Opportunity Feed
+
+↓
+
+Applications
+
+↓
+
+Notifications
+
+---
+
+# Success Metrics
+
+First 3 Months
+
+1000 Students
+
+100 Mentors
+
+200 Opportunities
+
+500 Applications
+
+100 Mentorship Sessions
+
+---
+
+# Long-Term Vision
+
+Lawable becomes India's largest legal professional ecosystem connecting students, lawyers, recruiters, educators, compliance professionals, and legal technology tools through a unified platform.
+
+Students enter through career development.
+
+Organizations enter through hiring.
+
+Mentors enter through networking.
+
+The network effect creates a scalable legal ecosystem that later expands into education, legal services, compliance solutions, and AI-powered legal products.
