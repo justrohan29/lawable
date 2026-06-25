@@ -4,10 +4,19 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Calendar, User, Search } from "lucide-react";
 import { db } from "@/lib/firebase";
-import { collection, query, getDocs, orderBy, where } from "firebase/firestore";
+import { collection, query, getDocs, orderBy, where, QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
+
+interface BlogPost {
+  id: string;
+  title: string;
+  summary?: string;
+  author: string;
+  createdAt: Date | { seconds: number; nanoseconds: number };
+  status?: string;
+}
 
 export default function PublicBlogPage() {
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,9 +31,9 @@ export default function PublicBlogPage() {
         orderBy("createdAt", "desc")
       );
       const querySnapshot = await getDocs(q);
-      const data: any[] = [];
-      querySnapshot.forEach((doc) => {
-        data.push({ id: doc.id, ...doc.data() });
+      const data: BlogPost[] = [];
+      querySnapshot.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+        data.push({ id: doc.id, ...doc.data() } as BlogPost);
       });
       setPosts(data);
     } catch (error) {
@@ -35,14 +44,16 @@ export default function PublicBlogPage() {
           title: "How to Draft a Bulletproof Term Sheet", 
           summary: "Learn the crucial clauses every VC and founder should look out for in 2026.",
           author: "Varun Mehta", 
-          createdAt: new Date() 
+          createdAt: new Date(),
+          status: "published"
         },
         { 
           id: "mock2", 
           title: "5 Skills Every Corporate Lawyer Needs", 
           summary: "Beyond reading contracts, here is what tier-1 firms actually test you on during internships.",
           author: "Priya Sharma", 
-          createdAt: new Date(Date.now() - 86400000) 
+          createdAt: new Date(Date.now() - 86400000),
+          status: "published"
         }
       ]);
     }
@@ -95,10 +106,17 @@ export default function PublicBlogPage() {
           </div>
         ) : (
           <div className="space-y-8">
-            {posts.map(post => (
+            {posts.map((post: BlogPost) => (
               <article key={post.id} className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group">
                 <div className="flex items-center gap-4 text-xs font-bold text-slate-500 mb-4">
-                  <div className="flex items-center gap-1.5"><Calendar size={14} /> {new Date(post.createdAt).toLocaleDateString()}</div>
+                  <div className="flex items-center gap-1.5">
+                    <Calendar size={14} /> 
+                    {new Date(
+                      typeof post.createdAt === 'object' && 'seconds' in post.createdAt 
+                        ? post.createdAt.seconds * 1000 
+                        : post.createdAt
+                    ).toLocaleDateString()}
+                  </div>
                   <div className="flex items-center gap-1.5"><User size={14} /> {post.author}</div>
                 </div>
                 
