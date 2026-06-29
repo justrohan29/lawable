@@ -30,10 +30,11 @@ export default function LoginPage() {
     
     if (res.success) {
       toast.success("Welcome back! 👋");
-      router.push("/dashboard");
+      router.push("/admin");
     } else {
       toast.error(res.error || "Invalid credentials.");
     }
+    
   };
 
   const fillDemo = (roleEmail: string) => {

@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   LayoutDashboard, Briefcase, Users, BookOpen, MessageSquare,
-  FileText, Calendar, Shield, LogOut, Scale, ChevronDown, Bell, Video
+  FileText, Calendar, LogOut, ChevronDown, Bell, Video,
+  type LucideIcon,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -33,7 +34,7 @@ const ROLE_LABELS: Record<string, string> = {
 
 type NavGroup = {
   label: string;
-  items: { icon: any; label: string; href: string }[];
+  items: { icon: LucideIcon; label: string; href: string }[];
 };
 
 export function AppSidebar() {
@@ -101,7 +102,7 @@ export function AppSidebar() {
       {
         label: "Admin Panel",
         items: [
-          { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
+          { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
           { icon: BookOpen, label: "Course Management", href: "/admin/courses" },
           { icon: Video, label: "Live Sessions", href: "/admin/sessions" },
         ],
@@ -110,7 +111,7 @@ export function AppSidebar() {
         label: "Operations",
         items: [
           { icon: Users, label: "User Directory", href: "/admin/users" },
-          { icon: FileText, label: "Blog Editor", href: "/admin/blog" },
+          { icon: FileText, label: "Blog Editor", href: "/admin/blogs" },
           { icon: Briefcase, label: "Lead CRM", href: "/admin/crm" },
         ],
       },
@@ -135,7 +136,7 @@ export function AppSidebar() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
               {group.items.map(item => {
-                const isActive = pathname === item.href;
+                const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(`${item.href}/`));
                 return (
                   <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 10, fontSize: 14, fontWeight: isActive ? 700 : 500, transition: "all .15s", position: "relative", color: isActive ? "#93c5fd" : "#94a3b8", background: isActive ? "rgba(59,130,246,0.15)" : "transparent", borderLeft: isActive ? "3px solid #3b82f6" : "3px solid transparent" }}
@@ -183,11 +184,11 @@ export function AppSidebar() {
           <DropdownMenuContent align="end" className="w-56" side="right" sideOffset={10}>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href={user.role === "student" ? "/profile" : "/mentor/profile"} className="cursor-pointer">Profile Settings</Link>
+            <DropdownMenuItem>
+              <Link href={user.role === "student" ? "/profile" : "/mentor/profile"} className="w-full cursor-pointer">Profile Settings</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/dashboard" className="cursor-pointer">Dashboard</Link>
+            <DropdownMenuItem>
+              <Link href="/dashboard" className="w-full cursor-pointer">Dashboard</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout} className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer">

@@ -4,8 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Mail, MapPin, Send } from "lucide-react";
 import { toast } from "sonner";
-import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { createLead } from "@/lib/crm";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -17,14 +16,13 @@ export default function ContactPage() {
     setLoading(true);
     
     try {
-      await addDoc(collection(db, "leads"), {
+      await createLead({
         ...formData,
-        type: "Contact Form",
-        createdAt: serverTimestamp()
+        source: "Contact Form",
       });
       setSuccess(true);
       toast.success("Message sent successfully!");
-    } catch (error) {
+    } catch {
       console.warn("Firebase not connected. Faking success for UI demo.");
       setTimeout(() => {
         setSuccess(true);
@@ -38,7 +36,7 @@ export default function ContactPage() {
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "var(--font-jakarta,system-ui,sans-serif)" }}>
       {/* Navbar */}
       <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, background: "rgba(255,255,255,0.9)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 72, display: "flex", alignItems: "center", justifyItems: "space-between" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 72, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ flex: 1 }}>
             <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
               <img src="/logo.png" alt="Lawable" style={{ width: 34, height: 34, objectFit: "contain", borderRadius: 8 }} />
@@ -46,7 +44,7 @@ export default function ContactPage() {
             </Link>
           </div>
           <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-            <div style={{ display: "flex", gap: 24, display: "none", "@media (min-width: 768px)": { display: "flex" } } as any}>
+            <div className="hidden gap-6 md:flex">
               <Link href="/courses" style={{ fontSize: 14, fontWeight: 600, color: "#475569", textDecoration: "none" }}>Courses</Link>
               <Link href="/blog" style={{ fontSize: 14, fontWeight: 600, color: "#475569", textDecoration: "none" }}>Blog</Link>
               <Link href="/about" style={{ fontSize: 14, fontWeight: 600, color: "#475569", textDecoration: "none" }}>About</Link>
@@ -104,7 +102,7 @@ export default function ContactPage() {
                   <Send size={24} />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">Message Sent!</h3>
-                <p className="text-slate-600">We've received your inquiry and will be in touch shortly.</p>
+                <p className="text-slate-600">We&apos;ve received your inquiry and will be in touch shortly.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm">
@@ -164,7 +162,7 @@ export default function ContactPage() {
             The premier platform for law students to learn practical skills and build successful legal careers.
           </p>
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 32, fontSize: 13, color: "#475569" }}>
-            © {new Date().getFullYear()} Lawable Technologies. All rights reserved.
+            Ã‚© {new Date().getFullYear()} Lawable Technologies. All rights reserved.
           </div>
         </div>
       </footer>

@@ -1,135 +1,200 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Plus, Search, Edit, Trash2, FileText, Upload } from "lucide-react";
-import { db } from "@/lib/firebase";
-import { collection, query, getDocs, orderBy, doc, setDoc } from "firebase/firestore";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { BookOpen, Briefcase, FileText, RefreshCw, Users } from "lucide-react";
+import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import { toast } from "sonner";
 
-export default function AdminBlogPage() {
-  const [posts, setPosts] = useState<any[]>([]);
+import { db } from "@/lib/firebase";
+import { getBlogs } from "@/lib/blog";
+import { getLeads } from "@/lib/crm";
+import { Blog } from "@/types/blog";
+import { Lead } from "@/types/lead";
+
+type AdminUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+};
+
+type Activity = {
+  id: string;
+  label: string;
+  meta: string;
+  href: string;
+};
+
+function getDisplayName(data: Record<string, unknown>) {
+  return String(data.name ?? data.fullName ?? data.email ?? "Unknown");
+}
+
+export default function AdminDashboardPage() {
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const loadDashboard = async () => {
+    try {
+      const [userSnapshot, blogData, leadData] = await Promise.all([
+        getDocs(query(collection(db, "users"), orderBy("createdAt", "desc"), limit(6))),
+        getBlogs(),
+        getLeads(),
+      ]);
+
+      setUsers(
+        userSnapshot.docs.map((userDoc) => {
+          const data = userDoc.data();
+          return {
+            id: userDoc.id,
+            name: getDisplayName(data),
+            email: String(data.email ?? ""),
+            role: String(data.role ?? "student"),
+          };
+        })
+      );
+      setBlogs(blogData as Blog[]);
+      setLeads(leadData);
+    } catch (error) {
+      console.error("Failed to load admin dashboard:", error);
+      toast.error("Could not load dashboard metrics.");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    fetchPosts();
+    const timer = window.setTimeout(() => {
+      void loadDashboard();
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
-  const fetchPosts = async () => {
-    try {
-      const q = query(collection(db, "blog"), orderBy("createdAt", "desc"));
-      const querySnapshot = await getDocs(q);
-      const data: any[] = [];
-      querySnapshot.forEach((doc) => {
-        data.push({ id: doc.id, ...doc.data() });
-      });
-      setPosts(data);
-    } catch (error) {
-      console.warn("Failed to fetch blog posts. Mocking data.");
-      setPosts([
-        { id: "b1", title: "How to draft a term sheet", status: "published", author: "Admin", createdAt: new Date() },
-        { id: "b2", title: "Navigating corporate law internships", status: "draft", author: "Admin", createdAt: new Date() }
-      ]);
-    }
-    setLoading(false);
-  };
+  const activities = useMemo<Activity[]>(() => {
+    const recentBlogs = blogs.slice(0, 3).map((blog) => ({
+      id: `blog-${blog.id}`,
+      label: blog.title,
+      meta: `Blog ${blog.status}`,
+      href: `/admin/blogs/edit/${blog.id}`,
+    }));
 
-  const createPost = async () => {
-    try {
-      const newId = `post_${Date.now()}`;
-      await setDoc(doc(db, "blog", newId), {
-        title: "Untitled Post",
-        content: "",
-        status: "draft",
-        author: "Admin",
-        createdAt: new Date(),
-      });
-      toast.success("Created new draft");
-      fetchPosts();
-    } catch (error) {
-      toast.error("Failed to create post. Check Firebase keys.");
-    }
-  };
+    const recentLeads = leads.slice(0, 3).map((lead) => ({
+      id: `lead-${lead.id}`,
+      label: lead.name,
+      meta: `Lead ${lead.status}`,
+      href: "/admin/crm",
+    }));
+
+    return [...recentLeads, ...recentBlogs].slice(0, 5);
+  }, [blogs, leads]);
+
+  const publishedBlogs = blogs.filter((blog) => blog.status === "published").length;
+  const openLeads = leads.filter((lead) => lead.status !== "closed" && lead.status !== "converted").length;
+  const convertedLeads = leads.filter((lead) => lead.status === "converted").length;
+
+  if (loading) return <div className="p-8">Loading dashboard...</div>;
 
   return (
-    <div className="p-8 pb-24 font-[family-name:var(--font-jakarta)] max-w-6xl mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+    <div className="space-y-6 p-8">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Blog Editor</h1>
-          <p className="text-slate-500">Create content to drive SEO and educate the community.</p>
+          <h1 className="text-3xl font-bold text-slate-950">Admin Dashboard</h1>
+          <p className="mt-1 text-sm text-slate-500">Operational overview for users, content, and CRM.</p>
         </div>
-        <button 
-          onClick={createPost}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-md shadow-blue-500/20"
+        <button
+          type="button"
+          onClick={() => {
+            setRefreshing(true);
+            loadDashboard();
+          }}
+          disabled={refreshing}
+          className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-300 px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
         >
-          <Plus size={18} /> New Post
+          <RefreshCw size={16} /> {refreshing ? "Refreshing" : "Refresh"}
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-slate-100 flex items-center gap-3">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search posts..." 
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-            />
-          </div>
-        </div>
+      <div className="grid gap-4 md:grid-cols-4">
+        <MetricCard icon={Users} label="Total Users" value={users.length} href="/admin/users" />
+        <MetricCard icon={BookOpen} label="Total Blogs" value={blogs.length} href="/admin/blogs" helper={`${publishedBlogs} published`} />
+        <MetricCard icon={Briefcase} label="Total Leads" value={leads.length} href="/admin/crm" helper={`${openLeads} open`} />
+        <MetricCard icon={FileText} label="Converted Leads" value={convertedLeads} href="/admin/crm" />
+      </div>
 
-        {loading ? (
-          <div className="p-12 text-center text-slate-500 font-medium animate-pulse">Loading posts...</div>
-        ) : posts.length === 0 ? (
-          <div className="p-16 text-center flex flex-col items-center">
-            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
-              <FileText size={28} className="text-blue-600" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900 mb-2">No blog posts found</h3>
-            <p className="text-slate-500 mb-6 max-w-md">Start writing articles to drive SEO traffic to your platform.</p>
-            <button onClick={createPost} className="text-blue-600 font-bold hover:underline">Write a Post</button>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <section className="rounded-lg border border-slate-200 bg-white">
+          <div className="flex items-center justify-between border-b border-slate-100 p-4">
+            <h2 className="font-semibold text-slate-950">Recent Activity</h2>
+            <Link href="/admin/crm" className="text-sm font-semibold text-blue-600">View CRM</Link>
           </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
-                <tr>
-                  <th className="px-6 py-4">Title</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Author</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {posts.map((post) => (
-                  <tr key={post.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-slate-900">
-                      {post.title}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
-                        post.status === 'published' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'
-                      }`}>
-                        {post.status.toUpperCase()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 font-medium text-slate-700">
-                      {post.author}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <button className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors mr-2">
-                        <Edit size={16} />
-                      </button>
-                      <button className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-red-500 hover:bg-red-50 transition-colors">
-                        <Trash2 size={16} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="divide-y divide-slate-100">
+            {activities.length === 0 ? (
+              <div className="p-6 text-sm text-slate-500">No recent activity yet.</div>
+            ) : (
+              activities.map((activity) => (
+                <Link key={activity.id} href={activity.href} className="block p-4 hover:bg-slate-50">
+                  <div className="font-medium text-slate-950">{activity.label}</div>
+                  <div className="text-sm text-slate-500">{activity.meta}</div>
+                </Link>
+              ))
+            )}
           </div>
-        )}
+        </section>
+
+        <section className="rounded-lg border border-slate-200 bg-white">
+          <div className="flex items-center justify-between border-b border-slate-100 p-4">
+            <h2 className="font-semibold text-slate-950">User Management</h2>
+            <Link href="/admin/users" className="text-sm font-semibold text-blue-600">Manage Users</Link>
+          </div>
+          <div className="divide-y divide-slate-100">
+            {users.length === 0 ? (
+              <div className="p-6 text-sm text-slate-500">No users found.</div>
+            ) : (
+              users.map((user) => (
+                <div key={user.id} className="flex items-center justify-between p-4">
+                  <div>
+                    <div className="font-medium text-slate-950">{user.name}</div>
+                    <div className="text-sm text-slate-500">{user.email}</div>
+                  </div>
+                  <span className="rounded bg-slate-100 px-2 py-1 text-xs font-semibold capitalize text-slate-700">{user.role}</span>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
       </div>
     </div>
+  );
+}
+
+function MetricCard({
+  icon: Icon,
+  label,
+  value,
+  href,
+  helper,
+}: {
+  icon: typeof Users;
+  label: string;
+  value: number;
+  href: string;
+  helper?: string;
+}) {
+  return (
+    <Link href={href} className="rounded-lg border border-slate-200 bg-white p-5 hover:bg-slate-50">
+      <div className="flex items-center justify-between">
+        <div className="rounded-lg bg-blue-50 p-2 text-blue-600">
+          <Icon size={20} />
+        </div>
+        <span className="text-2xl font-bold text-slate-950">{value}</span>
+      </div>
+      <div className="mt-4 text-sm font-semibold text-slate-700">{label}</div>
+      {helper ? <div className="mt-1 text-xs text-slate-500">{helper}</div> : null}
+    </Link>
   );
 }
