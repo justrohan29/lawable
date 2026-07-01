@@ -6,10 +6,15 @@ service firebase.storage {
       return request.auth != null;
     }
 
+    function isAdminEmail() {
+      return signedIn() && request.auth.token.email == "admin@lawable.in";
+    }
+
     function isAdmin() {
-      return signedIn()
-        && firestore.exists(/databases/(default)/documents/users/$(request.auth.uid))
-        && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == "admin";
+      return isAdminEmail()
+        || (signedIn()
+          && firestore.exists(/databases/(default)/documents/users/$(request.auth.uid))
+          && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == "admin");
     }
 
     match /blogs/{fileName} {

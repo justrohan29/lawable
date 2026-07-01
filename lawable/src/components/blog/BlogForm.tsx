@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { createBlog, updateBlog, uploadBlogImage } from "@/lib/blog";
+import { createBlog, updateBlog } from "@/lib/blog";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,7 @@ type BlogFormState = {
   excerpt: string;
   content: string;
   category: string;
+  coverImageUrl: string;
   status: BlogStatus;
   featured: boolean;
 };
@@ -36,6 +37,7 @@ const emptyState: BlogFormState = {
   excerpt: "",
   content: "",
   category: "",
+  coverImageUrl: "",
   status: "draft",
   featured: false,
 };
@@ -58,6 +60,7 @@ function getInitialState(blog?: Blog): BlogFormState {
     excerpt: blog.excerpt,
     content: blog.content,
     category: blog.category,
+    coverImageUrl: blog.coverImage,
     status: blog.status,
     featured: blog.featured,
   };
@@ -70,10 +73,36 @@ function validateBlogForm(values: BlogFormState, image: File | null): BlogFormEr
   if (values.excerpt.trim().length < 20) errors.excerpt = "Excerpt must be at least 20 characters.";
   if (values.content.trim().length < 50) errors.content = "Content must be at least 50 characters.";
   if (!values.category) errors.category = "Select a category.";
+  if (values.coverImageUrl && !/^https?:\/\/.+/i.test(values.coverImageUrl.trim())) {
+    errors.coverImageUrl = "Cover image URL must start with http:// or https://.";
+  }
   if (image && !image.type.startsWith("image/")) errors.coverImage = "Cover image must be an image file.";
-  if (image && image.size > 5 * 1024 * 1024) errors.coverImage = "Cover image must be smaller than 5 MB.";
+  if (image && image.size > 500 * 1024) errors.coverImage = "On the free Firebase plan, uploaded cover images must be smaller than 500 KB. For larger images, paste a hosted image URL instead.";
 
   return errors;
+}
+
+function readImageAsDataUrl(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.onerror = () => reject(new Error("Could not read cover image."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function getFirebaseErrorCode(error: unknown) {
+  return typeof error === "object" && error !== null && "code" in error ? String(error.code) : "";
+}
+
+function getBlogSaveErrorMessage(error: unknown) {
+  const code = getFirebaseErrorCode(error);
+
+  if (code.includes("permission-denied") || (error instanceof Error && error.message.includes("permission"))) {
+    return "Firebase rules are blocking this save. Deploy firestore.rules/storage.rules, then sign in as admin@lawable.in or set your users document role to admin.";
+  }
+
+  return error instanceof Error ? error.message : "Could not save blog. Check Firebase rules for Firestore and Storage.";
 }
 
 export default function BlogForm({ blog }: BlogFormProps) {
@@ -110,10 +139,10 @@ export default function BlogForm({ blog }: BlogFormProps) {
     }
 
     setLoading(true);
-    setSaveStep(image ? "Uploading cover image..." : "Saving blog...");
+    setSaveStep(image ? "Preparing cover image..." : "Saving blog...");
 
     try {
-      const coverImage = image ? await uploadBlogImage(image) : blog?.coverImage ?? "";
+      const coverImage = image ? await readImageAsDataUrl(image) : values.coverImageUrl.trim();
       setSaveStep("Saving blog...");
       const payload = {
         title: values.title.trim(),
@@ -139,7 +168,7 @@ export default function BlogForm({ blog }: BlogFormProps) {
       router.refresh();
     } catch (error) {
       console.error("Save blog failed:", error);
-      const message = error instanceof Error ? error.message : "Could not save blog. Check Firebase rules for Firestore and Storage.";
+      const message = getBlogSaveErrorMessage(error);
       toast.error(message);
     } finally {
       setLoading(false);
@@ -244,8 +273,23 @@ export default function BlogForm({ blog }: BlogFormProps) {
           }}
           aria-invalid={Boolean(errors.coverImage)}
         />
-        {blog?.coverImage && !image ? <p className="text-sm text-slate-500">Existing cover image will be kept.</p> : null}
+        <p className="text-sm text-slate-500">On the free Firebase plan, small images are saved inside Firestore. Use a hosted URL for larger images.</p>
         {errors.coverImage ? <p className="text-sm text-red-600">{errors.coverImage}</p> : null}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="coverImageUrl">Cover Image URL</Label>
+        <Input
+          id="coverImageUrl"
+          type="url"
+          value={values.coverImageUrl}
+          onChange={(event) => updateField("coverImageUrl", event.target.value)}
+          placeholder="https://example.com/blog-cover.jpg"
+          disabled={loading || Boolean(image)}
+          aria-invalid={Boolean(errors.coverImageUrl)}
+        />
+        {image ? <p className="text-sm text-slate-500">The selected small image will be used instead of this URL.</p> : null}
+        {errors.coverImageUrl ? <p className="text-sm text-red-600">{errors.coverImageUrl}</p> : null}
       </div>
 
       <label className="flex items-center gap-2 text-sm font-medium">

@@ -10,10 +10,15 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == userId;
     }
 
+    function isAdminEmail() {
+      return signedIn() && request.auth.token.email == "admin@lawable.in";
+    }
+
     function isAdmin() {
-      return signedIn()
-        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
-        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
+      return isAdminEmail()
+        || (signedIn()
+          && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+          && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin");
     }
 
     function publicBlog() {

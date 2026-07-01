@@ -1,4 +1,4 @@
-﻿import {
+import {
   addDoc,
   collection,
   deleteDoc,
@@ -17,7 +17,7 @@ import { db, storage } from "./firebase";
 import { Blog } from "@/types/blog";
 
 const blogCollection = collection(db, "blogs");
-const FIREBASE_OPERATION_TIMEOUT_MS = 20000;
+const FIREBASE_OPERATION_TIMEOUT_MS = 60000;
 
 function createAssetId() {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
