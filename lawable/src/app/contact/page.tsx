@@ -6,35 +6,73 @@ import { ArrowRight, Mail, MapPin, Send } from "lucide-react";
 import { toast } from "sonner";
 import { createLead } from "@/lib/crm";
 
+type ContactFormData = {
+  name: string;
+  email: string;
+  message: string;
+};
+
+const initialFormData: ContactFormData = { name: "", email: "", message: "" };
+
+function getContactErrorMessage(error: unknown) {
+  if (typeof error === "object" && error !== null && "code" in error) {
+    const code = String(error.code);
+
+    if (code.includes("permission-denied")) {
+      return "We could not submit your message because contact submissions are not enabled. Please try again later.";
+    }
+
+    if (code.includes("unavailable") || code.includes("deadline-exceeded")) {
+      return "The contact service is temporarily unavailable. Please try again in a moment.";
+    }
+  }
+
+  return "We could not send your message. Please try again.";
+}
+
 export default function ContactPage() {
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [formData, setFormData] = useState<ContactFormData>(initialFormData);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError("");
+
+    const payload = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      message: formData.message.trim(),
+    };
+
+    if (!payload.name || !payload.email || !payload.message) {
+      setSubmitError("Please complete all fields before sending.");
+      return;
+    }
+
     setLoading(true);
-    
+
     try {
       await createLead({
-        ...formData,
+        ...payload,
         source: "Contact Form",
       });
+      setFormData(initialFormData);
       setSuccess(true);
       toast.success("Message sent successfully!");
-    } catch {
-      console.warn("Firebase not connected. Faking success for UI demo.");
-      setTimeout(() => {
-        setSuccess(true);
-        toast.success("Message sent successfully! (Mocked)");
-      }, 1000);
+    } catch (error) {
+      console.error("Contact form submission failed:", error);
+      const message = getContactErrorMessage(error);
+      setSubmitError(message);
+      toast.error(message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "var(--font-jakarta,system-ui,sans-serif)" }}>
-      {/* Navbar */}
       <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, background: "rgba(255,255,255,0.9)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 72, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ flex: 1 }}>
@@ -60,16 +98,13 @@ export default function ContactPage() {
         </div>
       </nav>
 
-      {/* Hero */}
       <section className="bg-slate-900 pt-32 pb-20 px-6 text-center text-white relative">
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">Contact Us</h1>
         <p className="text-lg text-slate-400 max-w-xl mx-auto">Have a question about our courses or want to partner with us? Reach out below.</p>
       </section>
 
-      {/* Form Section */}
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
-          
           <div>
             <h2 className="text-2xl font-extrabold text-slate-900 mb-6">Get in Touch</h2>
             <div className="space-y-6">
@@ -108,37 +143,47 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} className="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-1.5">Full Name</label>
-                    <input 
+                    <label htmlFor="contact-name" className="block text-sm font-bold text-slate-700 mb-1.5">Full Name</label>
+                    <input
+                      id="contact-name"
                       required
-                      type="text" 
+                      type="text"
+                      autoComplete="name"
                       value={formData.name}
-                      onChange={e => setFormData({ ...formData, name: e.target.value })}
+                      onChange={(event) => setFormData({ ...formData, name: event.target.value })}
                       className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-1.5">Email Address</label>
-                    <input 
+                    <label htmlFor="contact-email" className="block text-sm font-bold text-slate-700 mb-1.5">Email Address</label>
+                    <input
+                      id="contact-email"
                       required
-                      type="email" 
+                      type="email"
+                      autoComplete="email"
                       value={formData.email}
-                      onChange={e => setFormData({ ...formData, email: e.target.value })}
+                      onChange={(event) => setFormData({ ...formData, email: event.target.value })}
                       className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-1.5">Message</label>
-                    <textarea 
+                    <label htmlFor="contact-message" className="block text-sm font-bold text-slate-700 mb-1.5">Message</label>
+                    <textarea
+                      id="contact-message"
                       required
                       rows={4}
                       value={formData.message}
-                      onChange={e => setFormData({ ...formData, message: e.target.value })}
+                      onChange={(event) => setFormData({ ...formData, message: event.target.value })}
                       className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"
                     />
                   </div>
-                  <button 
-                    type="submit" 
+                  {submitError ? (
+                    <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                      {submitError}
+                    </p>
+                  ) : null}
+                  <button
+                    type="submit"
                     disabled={loading}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors shadow-md shadow-blue-500/20 mt-4 disabled:opacity-50"
                   >
@@ -151,7 +196,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer style={{ background: "#060e1f", borderTop: "1px solid rgba(255,255,255,0.05)", padding: "80px 24px 40px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", textAlign: "center" }}>
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 10, marginBottom: 24 }}>
@@ -162,7 +206,7 @@ export default function ContactPage() {
             The premier platform for law students to learn practical skills and build successful legal careers.
           </p>
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 32, fontSize: 13, color: "#475569" }}>
-            Ã‚© {new Date().getFullYear()} Lawable Technologies. All rights reserved.
+            &copy; {new Date().getFullYear()} Lawable Technologies. All rights reserved.
           </div>
         </div>
       </footer>

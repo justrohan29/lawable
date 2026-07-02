@@ -3,14 +3,21 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Scale, ArrowRight, ArrowLeft, Mail, Lock, User, GraduationCap } from "lucide-react";
+import { ArrowRight, ArrowLeft, Mail, Lock, User, GraduationCap } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
+
+type RegisterRole = "student" | "mentor" | "recruiter" | "admin";
+
+const ROLE_CHOICES: { id: RegisterRole; label: string }[] = [
+  { id: "student", label: "Law Student" },
+  { id: "mentor", label: "Legal Professional" },
+];
 
 export default function RegisterPage() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<{
-    name: string; email: string; password: string; role: "student" | "mentor" | "recruiter" | "admin"; college: string;
+    name: string; email: string; password: string; role: RegisterRole; college: string;
   }>({
     name: "", email: "", password: "", role: "student", college: "",
   });
@@ -36,7 +43,6 @@ export default function RegisterPage() {
 
   return (
     <div style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "1fr 1fr", fontFamily: "var(--font-jakarta,system-ui,sans-serif)" }}>
-      {/* ── Left panel — dark navy ── */}
       <div style={{
         background: "linear-gradient(150deg,#060e1f 0%,#0f1e3a 60%,#162844 100%)",
         padding: "48px 56px", display: "flex", flexDirection: "column",
@@ -71,8 +77,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-
-      {/* ── Right panel — form ── */}
       <div style={{ background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 56px" }}>
         <div style={{ width: "100%", maxWidth: 420 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32 }}>
@@ -121,11 +125,16 @@ export default function RegisterPage() {
                   <label style={{ fontSize: 13, fontWeight: 600, color: "#334155", display: "block", marginBottom: 7 }}>Password</label>
                   <div style={{ position: "relative" }}>
                     <Lock style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#94a3b8" }} size={18} />
-                    <input type="password" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} required minLength={6}
-                      placeholder="••••••••"
+                    <input
+                      type="password"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      required
+                      minLength={6}
+                      placeholder="********"
                       style={{ width: "100%", padding: "11px 14px 11px 42px", borderRadius: 10, border: "1px solid #e2e8f0", fontSize: 15, color: "#0f172a", background: "#fff", outline: "none", boxSizing: "border-box", fontFamily: "inherit", transition: "border-color .15s, box-shadow .15s" }}
-                      onFocus={e => { e.target.style.borderColor = "#3b82f6"; e.target.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.1)"; }}
-                      onBlur={e => { e.target.style.borderColor = "#e2e8f0"; e.target.style.boxShadow = "none"; }}
+                      onFocus={(e) => { e.target.style.borderColor = "#3b82f6"; e.target.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.1)"; }}
+                      onBlur={(e) => { e.target.style.borderColor = "#e2e8f0"; e.target.style.boxShadow = "none"; }}
                     />
                   </div>
                 </div>
@@ -137,10 +146,7 @@ export default function RegisterPage() {
                 <div>
                   <label style={{ fontSize: 13, fontWeight: 600, color: "#334155", display: "block", marginBottom: 7 }}>I am a...</label>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                    {[
-                      { id: "student", label: "Law Student" },
-                      { id: "mentor", label: "Legal Professional" }
-                    ].map(role => (
+                    {ROLE_CHOICES.map(role => (
                       <div key={role.id} onClick={() => setFormData({ ...formData, role: role.id })}
                         style={{ border: `1px solid ${formData.role === role.id ? "#3b82f6" : "#e2e8f0"}`, background: formData.role === role.id ? "#eff6ff" : "#fff", padding: "12px", borderRadius: 10, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, transition: "all .15s" }}>
                         <div style={{ width: 16, height: 16, borderRadius: "50%", border: `2px solid ${formData.role === role.id ? "#3b82f6" : "#cbd5e1"}`, padding: 2 }}>

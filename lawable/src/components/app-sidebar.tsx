@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   LayoutDashboard, Briefcase, Users, BookOpen, MessageSquare,
-  FileText, Calendar, LogOut, ChevronDown, Bell, Video,
+  FileText, Calendar, LogOut, ChevronDown, Video,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -104,7 +104,6 @@ export function AppSidebar() {
         items: [
           { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
           { icon: BookOpen, label: "Course Management", href: "/admin/courses" },
-          { icon: Video, label: "Live Sessions", href: "/admin/sessions" },
         ],
       },
       {
@@ -152,18 +151,6 @@ export function AppSidebar() {
           </div>
         ))}
       </div>
-
-      {/* Notifications summary (fake) */}
-      <div style={{ padding: "0 16px", marginBottom: 16 }}>
-        <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "12px", display: "flex", alignItems: "center", gap: 10, border: "1px solid rgba(255,255,255,0.05)", cursor: "pointer", transition: "background .15s" }}
-          onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.07)"}
-          onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.04)"}>
-          <Bell size={16} color="#94a3b8" />
-          <span style={{ fontSize: 13, fontWeight: 500, color: "#cbd5e1", flex: 1 }}>Notifications</span>
-          <span style={{ background: "#f59e0b", color: "#fff", fontSize: 11, fontWeight: 800, padding: "2px 6px", borderRadius: 10 }}>3</span>
-        </div>
-      </div>
-
       {/* User profile dropdown */}
       <div style={{ padding: 16, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
         <DropdownMenu>
@@ -185,7 +172,7 @@ export function AppSidebar() {
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={user.role === "student" ? "/profile" : "/mentor/profile"} className="w-full cursor-pointer">Profile Settings</Link>
+              <Link href={user.role === "mentor" ? "/mentor/profile" : "/profile"} className="w-full cursor-pointer">Profile Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link href="/dashboard" className="w-full cursor-pointer">Dashboard</Link>

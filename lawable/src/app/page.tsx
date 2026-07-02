@@ -2,24 +2,37 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, Zap, BookOpen, Video, Users, CheckCircle, ChevronRight, Shield, Award } from "lucide-react";
+import { ArrowRight, Zap, BookOpen, Video, ChevronRight } from "lucide-react";
 import { db } from "@/lib/firebase";
-import { collection, query, getDocs, limit, where } from "firebase/firestore";
+import { collection, getDocs, limit, query, where } from "firebase/firestore";
+
+type FeaturedCourse = {
+  id: string;
+  title: string;
+  price: number;
+  description: string;
+};
 
 export default function LandingPage() {
-  const [courses, setCourses] = useState<any[]>([]);
+  const [courses, setCourses] = useState<FeaturedCourse[]>([]);
 
   useEffect(() => {
     const fetchFeaturedCourses = async () => {
       try {
         const q = query(collection(db, "courses"), where("status", "==", "published"), limit(3));
         const querySnapshot = await getDocs(q);
-        const data: any[] = [];
-        querySnapshot.forEach((doc) => {
-          data.push({ id: doc.id, ...doc.data() });
+        const data = querySnapshot.docs.map((courseDoc) => {
+          const data = courseDoc.data();
+
+          return {
+            id: courseDoc.id,
+            title: String(data.title ?? "Untitled Course"),
+            price: Number(data.price ?? 0),
+            description: String(data.description ?? ""),
+          };
         });
         setCourses(data);
-      } catch (error) {
+      } catch {
         setCourses([
           { id: "mock1", title: "Corporate Law Masterclass", price: 2999, description: "Master the fundamentals of corporate law and structuring." },
           { id: "mock2", title: "Commercial Contracts", price: 1500, description: "Draft bulletproof commercial contracts for top tier firms." }
@@ -31,7 +44,6 @@ export default function LandingPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "var(--font-jakarta,system-ui,sans-serif)" }}>
-      {/* ─── NAVBAR ─────────────────────────────────────────────────── */}
       <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, background: "rgba(255,255,255,0.9)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 72, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -39,7 +51,7 @@ export default function LandingPage() {
             <span style={{ fontWeight: 800, fontSize: 20, color: "#0f172a", letterSpacing: "-0.03em" }}>Lawable</span>
           </div>
           <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-            <div style={{ display: "flex", gap: 24, display: "none", "@media (min-width: 768px)": { display: "flex" } } as any}>
+            <div className="hidden gap-6 md:flex">
               <Link href="/courses" style={{ fontSize: 14, fontWeight: 600, color: "#475569", textDecoration: "none" }}>Courses</Link>
               <Link href="/blog" style={{ fontSize: 14, fontWeight: 600, color: "#475569", textDecoration: "none" }}>Blog</Link>
             </div>
@@ -52,15 +64,13 @@ export default function LandingPage() {
           </div>
         </div>
       </nav>
-
-      {/* ─── HERO ─────────────────────────────────────────────────── */}
       <section style={{ background: "linear-gradient(150deg,#060e1f 0%,#0f1e3a 55%,#162844 100%)", paddingTop: 140, paddingBottom: 100, paddingLeft: 24, paddingRight: 24, position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(59,130,246,0.07) 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center", position: "relative", zIndex: 1 }}>
           <div>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.25)", borderRadius: 999, padding: "6px 14px", marginBottom: 28 }}>
               <Zap size={13} color="#60a5fa" />
-              <span style={{ fontSize: 13, fontWeight: 600, color: "#93c5fd" }}>India's Premium Legal Academy</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#93c5fd" }}>India&apos;s Premium Legal Academy</span>
             </div>
             <h1 style={{ fontSize: "clamp(36px,4vw,56px)", fontWeight: 800, color: "#f8fafc", lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20 }}>
               Master the Law. <span style={{ display: "inline-block", background: "linear-gradient(135deg,#2563eb,#60a5fa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Accelerate Your Career.</span>
@@ -87,14 +97,12 @@ export default function LandingPage() {
                </div>
                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                  <span style={{ fontSize: 12, fontWeight: 700, color: "#64748b" }}>MODULE 2/5</span>
-                 <button style={{ background: "#0f172a", color: "white", padding: "6px 12px", borderRadius: 6, fontSize: 12, fontWeight: 700 }}>Continue →</button>
+                 <button style={{ background: "#0f172a", color: "white", padding: "6px 12px", borderRadius: 6, fontSize: 12, fontWeight: 700 }}>Continue -&gt;</button>
                </div>
              </div>
           </div>
         </div>
       </section>
-
-      {/* ─── DYNAMIC COURSES ─────────────────────────────────────────────────── */}
       <section style={{ padding: "100px 24px", background: "#f8fafc" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 60 }}>
@@ -111,7 +119,7 @@ export default function LandingPage() {
                 <h3 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginBottom: 8, lineHeight: 1.3 }}>{course.title}</h3>
                 <p style={{ fontSize: 14, color: "#64748b", marginBottom: 24, lineHeight: 1.6, minHeight: 45 }}>{course.description}</p>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 20, borderTop: "1px solid #f1f5f9" }}>
-                  <span style={{ fontSize: 18, fontWeight: 800, color: "#0f172a" }}>₹{course.price}</span>
+                  <span style={{ fontSize: 18, fontWeight: 800, color: "#0f172a" }}>Rs. {course.price}</span>
                   <Link href={`/courses`} style={{ fontSize: 14, fontWeight: 700, color: "#2563eb", display: "flex", alignItems: "center", gap: 4, textDecoration: "none" }}>
                     View Course <ChevronRight size={14} />
                   </Link>
@@ -121,8 +129,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* ─── FOOTER ─────────────────────────────────────────────────── */}
       <footer style={{ background: "#060e1f", borderTop: "1px solid rgba(255,255,255,0.05)", padding: "80px 24px 40px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", textAlign: "center" }}>
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 10, marginBottom: 24 }}>
@@ -133,7 +139,7 @@ export default function LandingPage() {
             The premier platform for law students to learn practical skills and build successful legal careers.
           </p>
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 32, fontSize: 13, color: "#475569" }}>
-            © {new Date().getFullYear()} Lawable Technologies. All rights reserved.
+            &copy; {new Date().getFullYear()} Lawable Technologies. All rights reserved.
           </div>
         </div>
       </footer>

@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, Shield, Users, Award } from "lucide-react";
+import { ArrowRight, BookOpen, Users } from "lucide-react";
 
 export default function AboutPage() {
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "var(--font-jakarta,system-ui,sans-serif)" }}>
       {/* Navbar (Same as landing page) */}
       <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, background: "rgba(255,255,255,0.9)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 72, display: "flex", alignItems: "center", justifyItems: "space-between" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 72, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ flex: 1 }}>
             <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
               <img src="/logo.png" alt="Lawable" style={{ width: 34, height: 34, objectFit: "contain", borderRadius: 8 }} />
@@ -14,7 +14,7 @@ export default function AboutPage() {
             </Link>
           </div>
           <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-            <div style={{ display: "flex", gap: 24, display: "none", "@media (min-width: 768px)": { display: "flex" } } as any}>
+            <div className="hidden gap-6 md:flex">
               <Link href="/courses" style={{ fontSize: 14, fontWeight: 600, color: "#475569", textDecoration: "none" }}>Courses</Link>
               <Link href="/blog" style={{ fontSize: 14, fontWeight: 600, color: "#475569", textDecoration: "none" }}>Blog</Link>
               <Link href="/about" style={{ fontSize: 14, fontWeight: 600, color: "#2563eb", textDecoration: "none" }}>About</Link>
@@ -58,7 +58,7 @@ export default function AboutPage() {
             <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100">
               <BookOpen size={32} className="text-blue-600 mb-6" />
               <h3 className="text-xl font-bold text-slate-900 mb-3">Practical Curriculum</h3>
-              <p className="text-slate-600">We don't teach theory. Our courses are built around real-world transactions, actual contract drafts, and the soft skills required to thrive in a high-pressure environment.</p>
+              <p className="text-slate-600">We don&apos;t teach theory. Our courses are built around real-world transactions, actual contract drafts, and the soft skills required to thrive in a high-pressure environment.</p>
             </div>
             <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100">
               <Users size={32} className="text-blue-600 mb-6" />
@@ -80,7 +80,7 @@ export default function AboutPage() {
             The premier platform for law students to learn practical skills and build successful legal careers.
           </p>
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 32, fontSize: 13, color: "#475569" }}>
-            © {new Date().getFullYear()} Lawable Technologies. All rights reserved.
+            &copy; {new Date().getFullYear()} Lawable Technologies. All rights reserved.
           </div>
         </div>
       </footer>

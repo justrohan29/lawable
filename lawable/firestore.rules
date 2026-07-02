@@ -33,7 +33,7 @@ service cloud.firestore {
       allow update: if isAdmin()
         || (isOwner(userId)
           && !request.resource.data.diff(resource.data).affectedKeys().hasAny(["role", "createdAt"]));
-      allow delete: if false;
+      allow delete: if isAdmin();
     }
 
     match /profiles/{userId} {
